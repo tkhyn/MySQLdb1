@@ -6,6 +6,8 @@ def get_config():
     metadata, options = get_metadata_and_options()
 
     connector = options["connector"]
+    if 'PROGRAMFILES(X86)' not in os.environ:
+        connector = connector.replace(' (x86)', '')
 
     extra_objects = []
 
@@ -18,6 +20,7 @@ def get_config():
     libraries = [ 'kernel32', 'advapi32', 'wsock32', client ]
     include_dirs = [ os.path.join(connector, r'include') ]
     extra_compile_args = [ '/Zl' ]
+    extra_link_args=['/MANIFEST']
     
     name = "MySQL-python"
     if enabled(options, 'embedded'):
@@ -35,6 +38,7 @@ def get_config():
         library_dirs = library_dirs,
         libraries = libraries,
         extra_compile_args = extra_compile_args,
+        extra_link_args = extra_link_args,
         include_dirs = include_dirs,
         extra_objects = extra_objects,
         define_macros = define_macros,
